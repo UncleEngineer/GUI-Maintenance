@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 
 GUI = Tk()
 
@@ -50,7 +51,26 @@ v_tel =StringVar()
 E6 = Entry(GUI,textvariable=v_tel,font=FONT2)
 E6.place(x=150,y=300)
 
-B = Button(GUI, text='บันทึกใบแจ้งซ่อม')
+def save():
+    name = v_name.get() # .get คือการดึงออกมาจาก StringVar
+    department = v_department.get()
+    machine = v_machine.get()
+    problem = v_problem.get()
+    number = v_number.get()
+    tel = v_tel.get()
+
+    text = 'ชื่อผู้แจ้ง: ' + name + '\n' # \n คือขึ้นบรรทัดใหม่
+    text = text + 'แผนก: ' + department + '\n'
+    text = text + 'อุปกรณ์/เครื่อง: ' + machine + '\n'
+    text = text + 'อาการเสีย: ' + problem + '\n'
+    text = text + 'หมายเลข: ' + number + '\n'
+    text = text + 'โทร: ' + tel + '\n'
+
+    messagebox.showinfo('กำลังบันทึกข้อมูล...',text)    
+
+
+
+B = Button(GUI, text='บันทึกใบแจ้งซ่อม',command=save)
 B.place(x=200,y=350)
 
 
