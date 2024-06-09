@@ -76,9 +76,20 @@ def save():
     text = text + 'หมายเลข: ' + number + '\n'
     text = text + 'โทร: ' + tel + '\n'
     dt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    datalist = [dt,name,department,machine,problem,number,tel]
+    # Generate Transaction
+    tsid = str(int(datetime.now().strftime('%y%m%d%H%M%S')) + 114152147165)
+    insert_mtworkorder(tsid,name,department,machine,problem,number,tel)
+    v_name.set('')
+    v_department.set('')
+    v_machine.set('')
+    v_problem.set('')
+    v_number.set('')
+    v_tel.set('')
+
+
+    # datalist = [dt,name,department,machine,problem,number,tel]
     # writecsv(datalist)
-    messagebox.showinfo('กำลังบันทึกข้อมูล...',text)    
+    # messagebox.showinfo('กำลังบันทึกข้อมูล...',text)    
 
 
 
