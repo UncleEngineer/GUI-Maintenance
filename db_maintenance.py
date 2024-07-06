@@ -10,13 +10,14 @@ c.execute(""" CREATE TABLE IF NOT EXISTS mt_workorder (
                     machine TEXT,
                     problem TEXT,
                     number TEXT,
-                    tel TEXT ) """)
+                    tel TEXT,
+                    status TEXT ) """)
 
 def insert_mtworkorder(tsid,name,department,machine,problem,number,tel):
     #CREATE
     with conn:
-        command = 'INSERT INTO mt_workorder VALUES (?,?,?,?,?,?,?,?)'
-        c.execute(command,(None,tsid,name,department,machine,problem,number,tel))
+        command = 'INSERT INTO mt_workorder VALUES (?,?,?,?,?,?,?,?,?)'
+        c.execute(command,(None,tsid,name,department,machine,problem,number,tel,'new'))
     conn.commit()
     #print('saved')
 
