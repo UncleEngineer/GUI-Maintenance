@@ -4,6 +4,18 @@ from tkinter import ttk
 GUI = Tk()
 GUI.geometry('500x500')
 
+
+L1 = ttk.Label(GUI,text='Hello',font=('Angsana New',20,'bold'),foreground='red')
+L1.pack()
+
+class RedText(ttk.Label):
+    def __init__(self,GUI,text='example',size=20):
+        ttk.Label.__init__(self,GUI,text=text,font=('Angsana New',size,'bold'),foreground='red')
+
+L2 = RedText(GUI,text='สวัสดีจ้าาา',size=40)
+L2.pack()
+
+
 class WorkorderList(ttk.Treeview):
     def __init__(self,GUI):
         header = ['TSID','ชื่อ','แผนก','อุปกรณ์','อาการเสีย','หมายเลข','เบอร์โทรผู้แจ้ง','สถานะ']
@@ -18,9 +30,9 @@ class WorkorderList(ttk.Treeview):
 
         
 t = WorkorderList(GUI)
-t.place(x=50,y=50)
+t.pack()
 t.insertdata(['X','Y','Z'])
-# t.insert('','end',values=['A','B','C'])
+# # t.insert('','end',values=['A','B','C'])
 
 
 GUI.mainloop()
