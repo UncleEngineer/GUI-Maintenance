@@ -13,6 +13,21 @@ c.execute(""" CREATE TABLE IF NOT EXISTS mt_workorder (
                     tel TEXT,
                     status TEXT ) """)
 
+# -tsid 
+# - วัน (date_start)
+# - รายละเอียดการซ่อม (detail)
+# - หมายเหตุ (Other)
+
+c.execute("""CREATE TABLE IF NOT EXISTS mt_note (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                tsid TEXT,
+                date_start TEXT,
+                detail TEXT,
+                other TEXT )""")
+
+
+
+
 def insert_mtworkorder(tsid,name,department,machine,problem,number,tel):
     #CREATE
     with conn:
@@ -58,4 +73,35 @@ def delete_mtworkorder(tsid):
     conn.commit()
     #print('deleted')
 
-    
+#########################################
+def insert_mtnote(tsid,date_start,detail,other):
+    with conn:
+        command = 'INSERT INTO mt_note VALUES (?,?,?,?,?)'
+        c.execute(command,(None,tsid,date_start,detail,other))
+    conn.commit()
+
+def view_mtnote():
+    with conn:
+        command = 'SELECT * FROM mt_note'
+        c.execute(command)
+        result = c.fetchall()
+    return result
+
+def view_mtnote_tsid(tsid):
+    with conn:
+        command = 'SELECT * FROM mt_note WHERE tsid=(?)'
+        c.execute(command,([tsid]))
+        result = c.fetchone()
+    return result
+
+def update_mtnote(tsid,field,newvalue):
+    with conn:
+        command = 'UPDATE mt_note SET {} = (?) WHERE tsid=(?)'.format(field)
+        c.execute(command,(newvalue,tsid))
+    conn.commit()
+def delete_mtnote(tsid):
+    with conn:
+        command = 'DELETE FROM mt_note WHERE tsid=(?)'
+        c.execute(command,([tsid]))
+    conn.commit()
+#########################################

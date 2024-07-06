@@ -29,15 +29,12 @@ FONT3 = ('Angsana New',13)
 # })
 # s.theme_use('MyStyle')
 
-
-
-
 Tab = ttk.Notebook(GUI)
 T1 = Frame(Tab)
 T2 = Frame(Tab)
 T3 = Frame(Tab)
 T4 = Frame(Tab)
-Tab.add(T1,text= f'{' '*5}ใบแจ้งซ่อม{' '*5}')
+Tab.add(T1,text= f"{' '*5}ใบแจ้งซ่อม{' '*5}")
 # Tab.add(T1,text= f'{' '*10}ใบแจ้งซ่อม{' '*10}')
 Tab.add(T2,text='ดูใบแจ้งซ่อม')
 Tab.add(T3,text='อนุมัติให้ซ่อมแล้ว')
@@ -321,6 +318,52 @@ def update_table_approved_wlist():
         d = list(d) #แปลง tuple เป็น list
         del d[0] # ลบ ID จาก database ออก
         approved_wlist.insert('','end',values=d)
+
+
+def Newnote(event):
+    GUI3 = Toplevel()
+    GUI3.geometry('500x500')
+    GUI3.title('รายละเอียดงานซ่อม')
+
+    select = approved_wlist.selection()
+    output = approved_wlist.item(select)
+    tsid = output['values'][0]
+
+    FONT4 = (None,15)
+    L = ttk.Label(GUI3,text='รายละเอียดงานซ่อม (tsid: {})'.format(tsid),font=FONT4)
+    L.pack(pady=10)
+
+    #
+    L = ttk.Label(GUI3,text='แผนซ่อมในวันที่',font=FONT4)
+    L.pack(pady=10)
+    v_date = StringVar()
+    E1 = ttk.Entry(GUI3,textvariable=v_date,font=FONT4)
+    E1.pack()
+
+    L = ttk.Label(GUI3,text='รายละเอียดงานซ่อม',font=FONT4)
+    L.pack(pady=10)
+    v_detail = StringVar()
+    E2 = ttk.Entry(GUI3,textvariable=v_date,font=FONT4)
+    E2.pack()
+
+    L = ttk.Label(GUI3,text='หมายเหตุ',font=FONT4)
+    L.pack(pady=10)
+    v_other = StringVar()
+    E3 = ttk.Entry(GUI3,textvariable=v_date,font=FONT4)
+    E3.pack()
+
+    B = ttk.Button(GUI3,text='Save')
+    B.pack(pady=20,ipadx=20,ipady=10)
+
+    
+
+
+    GUI3.mainloop()
+
+
+approved_wlist.bind('<Double-1>',Newnote)
+
+
 
 
 #####START UP######
