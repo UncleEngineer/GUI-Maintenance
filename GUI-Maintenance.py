@@ -263,6 +263,40 @@ def Delete_mtworkorder(event=None):
         update_table()
 
 mtworkorderlist.bind('<Delete>',Delete_mtworkorder)
+
+##### RIGHT CLICK MENU #######
+def Approved():
+    select = mtworkorderlist.selection()
+    output = mtworkorderlist.item(select)
+    tsid = output['values'][0]
+    
+    update_mtworkorder(tsid,'status','approved')
+    update_table()
+
+approved_menu = Menu(GUI,tearoff=0)
+approved_menu.add_command(label='approved',command=Approved)
+approved_menu.add_command(label='delete',command=Delete_mtworkorder)
+
+def popup(event):
+    approved_menu.post(event.x_root, event.y_root)
+
+mtworkorderlist.bind('<Button-3>',popup)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #####START UP######
 update_table()
 
