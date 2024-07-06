@@ -16,23 +16,36 @@ def writecsv(record_list):
 GUI = Tk()
 
 GUI.title('โปรแกรมซ่อมบำรุง v.0.0.1 by Loong')
-GUI.geometry('1000x600+50+50')
+GUI.geometry('1400x600+50+50')
 ####FONT#####
 FONT1 = ('Angsana New',20,'bold')
 FONT2 = ('Angsana New',15)
 FONT3 = ('Angsana New',13)
 
 #######TAB#######
+# s = ttk.Style()
+# s.theme_create('MyStyle',settings={
+#     'TNotebook.Tab':{'configure':{'padding':[10,10],'font':(None,'14','bold')}}
+# })
+# s.theme_use('MyStyle')
+
+
+
+
 Tab = ttk.Notebook(GUI)
 T1 = Frame(Tab)
 T2 = Frame(Tab)
 T3 = Frame(Tab)
-Tab.add(T1,text='ใบแจ้งซ่อม')
+T4 = Frame(Tab)
+Tab.add(T1,text= f'{' '*5}ใบแจ้งซ่อม{' '*5}')
+# Tab.add(T1,text= f'{' '*10}ใบแจ้งซ่อม{' '*10}')
 Tab.add(T2,text='ดูใบแจ้งซ่อม')
-Tab.add(T3,text='สรุป')
+Tab.add(T3,text='อนุมัติให้ซ่อมแล้ว')
+Tab.add(T4,text='รายการซ่อมเสร็จแล้ว')
 Tab.pack(fill=BOTH,expand=1)
 
-
+s = ttk.Style()
+s.configure('TNotebook.Tab',font=(None,12),padding=[30,10])
 
 
 #############
@@ -112,8 +125,8 @@ B.place(x=200,y=350)
 
 
 ################TAB2################
-header = ['TSID','ชื่อ','แผนก','อุปกรณ์','อาการเสีย','หมายเลข','เบอร์โทรผู้แจ้ง']
-headerw = [100,150,150,200,250,150,150]
+header = ['TSID','ชื่อ','แผนก','อุปกรณ์','อาการเสีย','หมายเลข','เบอร์โทรผู้แจ้ง','สถานะ']
+headerw = [100,150,150,200,250,150,150,150]
 
 mtworkorderlist = ttk.Treeview(T2,columns=header,show='headings',height=20)
 mtworkorderlist.pack()
