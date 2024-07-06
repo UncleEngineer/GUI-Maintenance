@@ -148,7 +148,7 @@ mtworkorderlist.column('TSID',anchor='e')
 def update_table():
     #clear ข้อมูลเก่า
     mtworkorderlist.delete(*mtworkorderlist.get_children())
-    data = view_mtworkorder()
+    data = view_mtworkorder_status(status='new')
     # print(data)
     for d in data:
         d = list(d) #แปลง tuple เป็น list
@@ -272,6 +272,7 @@ def Approved():
     
     update_mtworkorder(tsid,'status','approved')
     update_table()
+    update_table_approved_wlist() # อัพเดตตารางที่อนุมัติแล้ว
 
 approved_menu = Menu(GUI,tearoff=0)
 approved_menu.add_command(label='approved',command=Approved)
@@ -282,22 +283,48 @@ def popup(event):
 
 mtworkorderlist.bind('<Button-3>',popup)
 
+###################### T A B 3 ######################
+
+
+class WorkorderList(ttk.Treeview):
+    def __init__(self,GUI):
+        header = ['TSID','ชื่อ','แผนก','อุปกรณ์','อาการเสีย','หมายเลข','เบอร์โทรผู้แจ้ง','สถานะ']
+        headerw = [100,150,150,200,250,150,150,150]
+        ttk.Treeview.__init__(self,GUI,columns=header,show='headings',height=20)
+        for h,w in zip(header,headerw):
+            self.heading(h,text=h)
+            self.column(h,width=w,anchor='center')
+    
+    def insertdata(self,values):
+        self.insert('','end',values=values)
+
+class MenuText(ttk.Label):
+    def __init__(self,GUI,text='example',size=20):
+        ttk.Label.__init__(self,GUI,text=text,font=('Angsana New',size,'bold'),foreground='black')
 
 
 
+# Table of Approved List
+L = MenuText(T3,text='ตารางแสดงรายการอนุมัติให้ซ่อม',size=30)
+L.pack()
 
+approved_wlist = WorkorderList(T3)
+approved_wlist.pack()
 
-
-
-
-
-
-
-
-
+# update_table + ชื่อตาราง = ฟังชั่นสำหรับอัพเดตตารางนั้นๆ
+def update_table_approved_wlist():
+    #clear ข้อมูลเก่า
+    approved_wlist.delete(*approved_wlist.get_children())
+    data = view_mtworkorder_status(status='approved')
+    # print(data)
+    for d in data:
+        d = list(d) #แปลง tuple เป็น list
+        del d[0] # ลบ ID จาก database ออก
+        approved_wlist.insert('','end',values=d)
 
 
 #####START UP######
 update_table()
+update_table_approved_wlist()
 
 GUI.mainloop()

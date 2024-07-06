@@ -31,6 +31,16 @@ def view_mtworkorder():
     #print(result)
     return result
 
+def view_mtworkorder_status(status='approved'):
+    # READ
+    with conn:
+        command = 'SELECT * FROM mt_workorder WHERE status=(?)'
+        c.execute(command,([status]))
+        result = c.fetchall()
+    #print(result)
+    return result
+
+
 def update_mtworkorder(tsid,field,newvalue):
     # UPDATE
     with conn:
