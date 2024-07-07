@@ -3,8 +3,10 @@ from tkinter import messagebox
 from tkinter import ttk
 import csv
 from datetime import datetime
+from tkcalendar import DateEntry # pip install tkcalendar
 # DATABASE
 from db_maintenance import *
+
 
 def writecsv(record_list):
     with open('data.csv','a',newline='',encoding='utf-8') as file:
@@ -16,7 +18,22 @@ def writecsv(record_list):
 GUI = Tk()
 
 GUI.title('โปรแกรมซ่อมบำรุง v.0.0.1 by Loong')
-GUI.geometry('1400x600+50+50')
+
+#GUI.geometry('700x500')
+w = 1400
+h = 600
+
+ws = GUI.winfo_screenwidth() #screen width
+hs = GUI.winfo_screenheight() #screen height
+#print(ws,hs)
+
+x = (ws/2) - (w/2)
+y = (hs/2) - (h/2)
+
+GUI.geometry(f'{w}x{h}+{x:.0f}+{y:.0f}')
+
+
+# GUI.geometry('1400x600+50+50')
 ####FONT#####
 FONT1 = ('Angsana New',20,'bold')
 FONT2 = ('Angsana New',15)
@@ -56,30 +73,39 @@ v_name = StringVar() #ตัวแปรพิเศษใช้กับ GUI
 E1 = ttk.Entry(T1,textvariable=v_name, font=FONT2)
 E1.place(x=150,y=50)
 
+# def next_e2(event):
+#     E2.focus()
+# E1.bind('<Return>',next_e2)
+E1.bind('<Return>',lambda x: E2.focus())
+
 #-------------
 L = Label(T1,text='แผนก',font=FONT2)
 L.place(x=30,y=100)
 v_department =StringVar()
 E2 = ttk.Entry(T1,textvariable=v_department,font=FONT2)
 E2.place(x=150,y=100)
+E2.bind('<Return>',lambda x: E3.focus())
 #-------------
 L = Label(T1,text='อุปกรณ์/เครื่อง',font=FONT2)
 L.place(x=30,y=150)
 v_machine =StringVar()
 E3 = ttk.Entry(T1,textvariable=v_machine,font=FONT2)
 E3.place(x=150,y=150)
+E3.bind('<Return>',lambda x: E4.focus())
 #-------------
 L = Label(T1,text='อาการเสีย',font=FONT2)
 L.place(x=30,y=200)
 v_problem =StringVar()
 E4 = ttk.Entry(T1,textvariable=v_problem ,font=FONT2)
 E4.place(x=150,y=200)
+E4.bind('<Return>',lambda x: E5.focus())
 #-------------
 L = Label(T1,text='หมายเลข',font=FONT2)
 L.place(x=30,y=250)
 v_number =StringVar()
 E5 = ttk.Entry(T1,textvariable=v_number,font=FONT2)
 E5.place(x=150,y=250)
+E5.bind('<Return>',lambda x: E6.focus())
 #-------------
 L = Label(T1,text='เบอร์โทร',font=FONT2)
 L.place(x=30,y=300)
@@ -87,7 +113,7 @@ v_tel =StringVar()
 E6 = ttk.Entry(T1,textvariable=v_tel,font=FONT2)
 E6.place(x=150,y=300)
 
-def save():
+def save(event=None):
     name = v_name.get() # .get คือการดึงออกมาจาก StringVar
     department = v_department.get()
     machine = v_machine.get()
@@ -112,6 +138,7 @@ def save():
     v_number.set('')
     v_tel.set('')
     update_table()
+    E1.focus()
 
 
     # datalist = [dt,name,department,machine,problem,number,tel]
@@ -120,7 +147,7 @@ def save():
 B = ttk.Button(T1, text='บันทึกใบแจ้งซ่อม',command=save)
 B.place(x=200,y=350)
 
-
+E6.bind('<Return>',save)
 ################TAB2################
 header = ['TSID','ชื่อ','แผนก','อุปกรณ์','อาการเสีย','หมายเลข','เบอร์โทรผู้แจ้ง','สถานะ']
 headerw = [100,150,150,200,250,150,150,150]
@@ -138,7 +165,7 @@ for h,w in zip(header,headerw):
     mtworkorderlist.heading(h,text=h)
     mtworkorderlist.column(h,width=w,anchor='center')
 
-mtworkorderlist.column('TSID',anchor='e')
+mtworkorderlist.column('TSID',anchor='e') #ชิดขวา ตัวเลข
 
 # mtworkorderlist.insert('','end',values=['A','B','C','D','E','F','G'])
 
@@ -151,7 +178,6 @@ def update_table():
         d = list(d) #แปลง tuple เป็น list
         del d[0] # ลบ ID จาก database ออก
         mtworkorderlist.insert('','end',values=d)
-
 
 ## หน้าสำหรับแก้ไขข้อความ
 
@@ -322,37 +348,67 @@ def update_table_approved_wlist():
 
 def Newnote(event):
     GUI3 = Toplevel()
-    GUI3.geometry('500x500')
+    GUI3.geometry('600x600')
     GUI3.title('รายละเอียดงานซ่อม')
 
     select = approved_wlist.selection()
     output = approved_wlist.item(select)
     tsid = output['values'][0]
 
+    
+
     FONT4 = (None,15)
     L = ttk.Label(GUI3,text='รายละเอียดงานซ่อม (tsid: {})'.format(tsid),font=FONT4)
     L.pack(pady=10)
 
-    #
+    ###################
     L = ttk.Label(GUI3,text='แผนซ่อมในวันที่',font=FONT4)
     L.pack(pady=10)
     v_date = StringVar()
-    E1 = ttk.Entry(GUI3,textvariable=v_date,font=FONT4)
-    E1.pack()
+    # E1 = ttk.Entry(GUI3,textvariable=v_date,font=FONT4)
+    # E1.pack()
 
+    cal = DateEntry(GUI3, width=30, background='darkblue',foreground='white', borderwidth=2, year=2024,date_pattern='dd/MM/yyyy')
+    cal.pack(padx=10, pady=10)
+    ###################
     L = ttk.Label(GUI3,text='รายละเอียดงานซ่อม',font=FONT4)
     L.pack(pady=10)
-    v_detail = StringVar()
-    E2 = ttk.Entry(GUI3,textvariable=v_date,font=FONT4)
+    E2 = Text(GUI3,font=FONT4,width=40,height=5)
     E2.pack()
-
+    ###################
     L = ttk.Label(GUI3,text='หมายเหตุ',font=FONT4)
     L.pack(pady=10)
-    v_other = StringVar()
-    E3 = ttk.Entry(GUI3,textvariable=v_date,font=FONT4)
+    E3 = Text(GUI3,font=FONT4,width=40,height=5)
     E3.pack()
+    ###################
+    # get data from mtnote (1, '354858297216', '07/07/2024', 'ซ่อมได้เลย', 'ซ่อมหยุดเครื่อง')
+    data = view_mtnote_tsid(tsid)
+    print(data)
 
-    B = ttk.Button(GUI3,text='Save')
+    GUI3.bind('<F1>',lambda x: E3.focus())
+
+    if data != None:
+        
+        cal.set_date(data[2])
+        E2.insert(END,data[3])
+        E3.insert(END,data[4])
+
+    ###################
+
+    def SaveDetail():
+        date_start = cal.get()
+        detail = E2.get('1.0',END).strip()
+        other = E3.get('1.0',END).strip()
+        if data == None:
+            insert_mtnote(tsid,date_start,detail,other)
+        else:
+            update_mtnote(tsid,'date_start',date_start)
+            update_mtnote(tsid,'detail',detail)
+            update_mtnote(tsid,'other',other)
+
+        GUI3.destroy()
+
+    B = ttk.Button(GUI3,text='Save',command=SaveDetail)
     B.pack(pady=20,ipadx=20,ipady=10)
 
     
