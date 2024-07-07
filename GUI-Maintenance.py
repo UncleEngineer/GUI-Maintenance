@@ -411,19 +411,54 @@ def Newnote(event):
     B = ttk.Button(GUI3,text='Save',command=SaveDetail)
     B.pack(pady=20,ipadx=20,ipady=10)
 
-    
-
 
     GUI3.mainloop()
 
-
 approved_wlist.bind('<Double-1>',Newnote)
 
+##### RIGHT CLICK MENU - อนุมัติรายละเอียดงานซ่อม #######
+def Done():
+    select = approved_wlist.selection()
+    output = approved_wlist.item(select)
+    tsid = output['values'][0]
+    
+    update_mtworkorder(tsid,'status','done')
+    update_table()
+    update_table_approved_wlist() # อัพเดตตารางที่อนุมัติแล้ว
+    update_table_done_wlist()
+    # อัพเดตตารางใหม่
+
+done_menu = Menu(GUI,tearoff=0)
+done_menu.add_command(label='done',command=Done)
+
+def popup(event):
+    done_menu.post(event.x_root, event.y_root)
+
+approved_wlist.bind('<Button-3>',popup)
 
 
+###################### T A B 4 ######################
+
+# Table of Done List
+L = MenuText(T4,text='ตารางแสดงรายการซ่อมเสร็จแล้ว',size=30)
+L.pack()
+
+done_wlist = WorkorderList(T4)
+done_wlist.pack()
+
+# update_table + ชื่อตาราง = ฟังชั่นสำหรับอัพเดตตารางนั้นๆ
+def update_table_done_wlist():
+    #clear ข้อมูลเก่า
+    done_wlist.delete(*done_wlist.get_children())
+    data = view_mtworkorder_status(status='done')
+    # print(data)
+    for d in data:
+        d = list(d) #แปลง tuple เป็น list
+        del d[0] # ลบ ID จาก database ออก
+        done_wlist.insert('','end',values=d)
 
 #####START UP######
 update_table()
 update_table_approved_wlist()
-
+update_table_done_wlist()
 GUI.mainloop()
